@@ -7,15 +7,70 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+    <!-- Navbar -->
     <nav>
         <a href="index.html">Home</a>
         <a href="wishlist.html">Wishlist</a>
         <a href="cart.html">Cart</a>
     </nav>
-    <div id="content">
-        <!-- Product Grid Will Be Here -->
-    </div>
-    <script src="script.js"></script>
+
+    <!-- Button to load products -->
+    <button id="load-products">Load Products</button>
+
+    <!-- Product grid to display products -->
+    <div id="product-grid" class="grid"></div>
+
+    <!-- JavaScript Section -->
+    <script>
+        // Event listener for the "Load Products" button
+        document.getElementById('load-products').addEventListener('click', function () {
+            fetch('https://fakestoreapi.com/products')
+                .then((response) => response.json())  // Parse the JSON response
+                .then((products) => {
+                    displayProducts(products);  // Call the function to display products
+                })
+                .catch((error) => {
+                    console.error('Error fetching products:', error);
+                });
+        });
+
+        // Function to display products as cards
+        function displayProducts(products) {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';  // Clear any existing products in the grid
+
+            products.forEach((product) => {
+                const card = document.createElement('div');
+                card.className = 'product-card';  // Add a class for styling
+
+                // Add product details to the card
+                card.innerHTML = `
+                    <img src="${product.image}" alt="${product.title}" />
+                    <h3>${product.title}</h3>
+                    <p>Price: $${product.price}</p>
+                    <p>Rating: ${product.rating.rate}</p>
+                    <button class="wishlist-btn">Wishlist Product</button>
+                `;
+
+                // Add event listener for the Wishlist button
+                card.querySelector('.wishlist-btn').addEventListener('click', () => {
+                    addToWishlist(product);
+                });
+
+                // Append the card to the grid
+                grid.appendChild(card);
+            });
+        }
+
+        // Function to add product to the wishlist in Local Storage
+        function addToWishlist(product) {
+            let wishlistedProducts = JSON.parse(localStorage.getItem('wishlistedProducts')) || [];
+            wishlistedProducts.push(product);
+            localStorage.setItem('wishlistedProducts', JSON.stringify(wishlistedProducts));
+            alert('Product added to wishlist!');
+        }
+    </script>
+
 </body>
 </html>
-Created index.html with basic structure
