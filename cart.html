@@ -1,1 +1,50 @@
+<div id="cart-grid" class="grid"></div>
+<div id="checkout">
+    <h3>Total Price: $<span id="total-price">0</span></h3>
+    <button id="checkout-btn">Checkout</button>
+</div>
 
+document.addEventListener('DOMContentLoaded', () => {
+    const cartGrid = document.getElementById('cart-grid');
+    const totalPriceElement = document.getElementById('total-price');
+    const cartProducts = JSON.parse(localStorage.getItem('cartProducts')) || [];
+    let totalPrice = 0;
+
+    cartProducts.forEach((product, index) => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+            <img src="${product.image}" alt="${product.title}" />
+            <h3>${product.title}</h3>
+            <p>Price: $${product.price}</p>
+            <p>${product.description}</p>
+            <p>Rating: ${product.rating.rate}</p>
+            <button class="remove-btn" data-index="${index}">Remove from Cart</button>
+        `;
+        totalPrice += product.price;
+        card.querySelector('.remove-btn').addEventListener('click', () => {
+            removeFromCart(index);
+        });
+        cartGrid.appendChild(card);
+    });
+
+    totalPriceElement.textContent = totalPrice.toFixed(2);
+
+    document.getElementById('checkout-btn').addEventListener('click', () => {
+        if (confirm('Are you sure to checkout?')) {
+            setTimeout(() => {
+                alert('Thanks for shopping!');
+                localStorage.removeItem('cartProducts');
+                cartGrid.innerHTML = '';
+                totalPriceElement.textContent = '0';
+            }, 2000);
+        }
+    });
+});
+
+function removeFromCart(index) {
+    let cartProducts = JSON.parse(localStorage.getItem('cartProducts'));
+    cartProducts.splice(index, 1);
+    localStorage.setItem('cartProducts', JSON.stringify(cartProducts));
+    location.reload(); // Reload to update UI
+}
