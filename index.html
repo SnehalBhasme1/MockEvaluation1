@@ -64,12 +64,16 @@
         }
 
         // Function to add product to the wishlist in Local Storage
-        function addToWishlist(product) {
-            let wishlistedProducts = JSON.parse(localStorage.getItem('wishlistedProducts')) || [];
-            wishlistedProducts.push(product);
-            localStorage.setItem('wishlistedProducts', JSON.stringify(wishlistedProducts));
-            alert('Product added to wishlist!');
-        }
+       function addToWishlist(product) {
+    let wishlistedProducts = JSON.parse(localStorage.getItem('wishlistedProducts')) || [];
+    wishlistedProducts.push(product);
+    localStorage.setItem('wishlistedProducts', JSON.stringify(wishlistedProducts));
+
+    console.log("Product added to wishlist:", product);  // Log the product that was added to wishlist
+
+    alert('Product added to wishlist!');
+}
+
     </script>
 
 </body>
